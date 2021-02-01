@@ -1,0 +1,23 @@
+{
+  "name": "web-terminal-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/main.js",
+  "scripts": {
+    "prod": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^14.14.20",
+    "koa": "^2.13.1",
+    "koa-router": "^10.0.0",
+    "koa-send": "^5.0.1",
+    "koa-static": "^5.0.0",
+    "koa-views": "^7.0.0",
+    "koa-websocket": "^6.0.0",
+    "node-pty": "^0.9.0",
+    "uuid": "^8.3.2",
+    "xterm": "^4.10.0"
+  }
+}

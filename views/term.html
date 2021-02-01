@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./xterm.css" />
+    <script src="./xterm.js"></script>
+    <script src="./js/term-ws.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="terminal" class="term"></div>
+
+    <script>
+        var auth = false;
+        var os, os_type, os_arch, os_version;
+        
+        connectSock();
+        addListenerSock('open', function() {
+            // 认证用户名密码
+            sendAuthInfo('test', 'test');
+        });
+        
+        addListenerSock('close', function() {
+            auth = false;
+            alert('ws断开了');
+        });
+
+        addListenerSock('platform-info', function(evt) {
+            /*
+            {
+                op: string,         
+                os: string,         // win32
+                os_type: string,       // Windows_NT
+                version: string,    // 10.0.20251
+                arch: string        // x64
+            }
+            */
+            console.log('type: ' + evt.os_type);
+            console.log('os: ' + evt.os);
+            console.log('arch: ' + evt.arch);
+            console.log('version: ' + evt.version);
+
+            os = evt.os;
+            os_type = evt.os_type;
+            os_arch = evt.arch;
+            os_version = evt.version;
+        });
+
+        addListenerSock('auth', function(evt) {
+            if(!evt.auth) {
+                alert('认证失败');
+                return;
+            }
+            // alert('认证成功');
+            auth = false;
+            if(os === 'win32') {
+                var version = parseInt(os_version.match(/\d+/i)[0]);
+                if(version >= 7) {
+                    shell = 'powershell.exe';
+                } else {
+                    shell = 'cmd.exe';
+                }
+            } else {
+                shell = 'bash';
+            }
+            newTerminal(document.querySelector('#terminal'), shell);
+        });
+
+        addListenerSock('no-auth', function() {
+            alert('未认证');
+        });
+        
+    </script>
+</body>
+
+</html>
